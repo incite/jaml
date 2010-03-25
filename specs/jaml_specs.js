@@ -22,7 +22,7 @@ describe("Jaml", function () {
       );
     });
     
-    expect(clean(Jaml.render('simple'))).toEqual(clean("\
+    expect(stripWhitespace(Jaml.render('simple'))).toEqual(stripWhitespace("\
       <div>\
         <h1>Some title</h1>\
         <p>Some exciting paragraph text</p>\
@@ -62,7 +62,7 @@ describe("Jaml", function () {
       description: 'Best. Show. Evar.'
     };
     
-    expect(clean(Jaml.render('product', bsg))).toEqual(clean("\
+    expect(stripWhitespace(Jaml.render('product', bsg))).toEqual(stripWhitespace("\
       <div class=\"product\">\
         <h1>Battlestar Galactica DVDs</h1>\
         <p>Best. Show. Evar.</p>\
@@ -76,26 +76,70 @@ describe("Jaml", function () {
       </div>\
     "));
   });
-});
-
-describe("clean method", function() {
-  it("should remove whitespace between tags", function() {
-    expect(clean("<b>  </b>   <div>  </div>")).toEqual("<b></b><div></div>");
-  });
   
-  it("should trim whitespace", function() {
-    expect(clean("  <b>  ")).toEqual("<b>");
-  });
-  
-  it("should remove newlines", function() {
-    expect(clean("\na\nb\n\n\n")).toEqual("ab");
-  });
-});
+  it("should render collections and partials", function() {
+    Jaml.register('category', function(category) {
+      div({cls: 'category'},
+        h1(category.name),
+        p(category.products.length + " products in this category:"),
 
-function clean(string) {
-  string = string.replace(/>\s+</g, "><");
-  string = string.replace(/^\s+/, "");
-  string = string.replace(/\s+$/, "");
-  string = string.replace(/\n/, "");
-  return string;
-}
+        div({cls: 'products'},
+          Jaml.render('product', category.products)
+        )
+      );
+    });
+    
+    var bsg = {
+      title      : 'Battlestar Galactica DVDs',
+      thumbUrl   : 'thumbnail.png',
+      imageUrl   : 'image.png',
+      description: 'Best. Show. Evar.'
+    };
+    
+    //here's a second product
+    var snowWhite = {
+      title      : 'Snow White',
+      description: 'not so great actually',
+      thumbUrl   : 'thumbnail.png',
+      imageUrl   : 'image.png'
+    };
+
+    //and a category
+    var category = {
+      name    : 'Doovde',
+      products: [bsg, snowWhite]
+    };
+    
+    expect(stripWhitespace(Jaml.render('category', category))).toEqual(stripWhitespace("\
+      <div class=\"category\">\
+        <h1>Doovde</h1>\
+        <p>2 products in this category:</p>\
+        <div class=\"products\">\
+          <div class=\"product\">\
+            <h1>Battlestar Galactica DVDs</h1>\
+            <p>Best. Show. Evar.</p>\
+            <img src=\"thumbnail.png\" />\
+            <a href=\"image.png\">View larger image</a>\
+            <form>\
+              <label for=\"quantity\">Quantity</label>\
+              <input type=\"text\" name=\"quantity\" id=\"quantity\" value=\"1\" />\
+              <input type=\"submit\" value=\"Add to Cart\" />\
+            </form>\
+          </div>\
+          <div class=\"product\">\
+            <h1>Snow White</h1>\
+            <p>not so great actually</p>\
+            <img src=\"thumbnail.png\" />\
+            <a href=\"image.png\">View larger image</a>\
+            <form>\
+              <label for=\"quantity\">Quantity</label>\
+              <input type=\"text\" name=\"quantity\" id=\"quantity\" value=\"1\" />\
+              <input type=\"submit\" value=\"Add to Cart\" />\
+            </form>\
+          </div>\
+        </div>\
+      </div>\
+    "));
+    
+  })
+});
