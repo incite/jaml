@@ -7,7 +7,6 @@
  */
 Jaml = function() {
   return {
-    automaticScope: true,
     templates: {},
     helpers  : {},
     
@@ -39,11 +38,9 @@ Jaml = function() {
      */
     registerHelper: function(name, helperFn) {
       this.helpers[name] = helperFn;
-      Jaml.Template.prototype[name] = helperFn;
     }
   };
-}();
-/**
+}();/**
  * @constructor
  * @param {String} tagName The tag name this node represents (e.g. 'p', 'div', etc)
  */
@@ -101,8 +98,13 @@ Jaml.Node.prototype = {
     lpad = lpad || 0;
     
     var node      = [],
+        attrs     = [],
         textnode  = (this instanceof Jaml.TextNode),
         multiline = this.multiLineTag();
+    
+    for (var key in this.attributes) {
+      attrs.push(key + '=' + this.attributes[key]);
+    }
     
     //add any left padding
     if (!textnode) node.push(this.getPadding(lpad));
@@ -112,7 +114,11 @@ Jaml.Node.prototype = {
     
     //add any tag attributes
     for (var key in this.attributes) {
-      node.push(" " + key + "=\"" + this.attributes[key] + "\"");
+      var value = "" + this.attributes[key];
+      if (value) {
+        value = value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      node.push(" " + key + "=\"" + value + "\"");
     }
     
     if (this.isSelfClosing()) {
@@ -174,8 +180,7 @@ Jaml.Node.prototype = {
    * @type Array
    * An array of all tags that should be self closing
    */
-  selfClosingTags: ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr',
-                    'img', 'input', 'isindex', 'link', 'meta', 'param']
+  selfClosingTags: ['img', 'meta', 'br', 'hr', 'link', 'input']
 };
 
 Jaml.TextNode = function(text) {
@@ -186,8 +191,7 @@ Jaml.TextNode.prototype = {
   render: function() {
     return this.text;
   }
-};
-/**
+};/**
  * Represents a single registered template. Templates consist of an arbitrary number
  * of trees (e.g. there may be more than a single root node), and are not compiled.
  * When a template is rendered its node structure is computed with any provided template
@@ -225,20 +229,10 @@ Jaml.Template.prototype = {
       data = [data];
     }
     
-    if (Jaml.automaticScope) {
-      // Use function decompilation to put all helpers in the
-      // function's scope.
-      with(this) {
-        for (var i = 0; i < data.length; i++) {
-          eval("(" + this.tpl.toString() + ")(data[i], i)");
-        };
-      }      
-    } else {
-      // Avoid the `eval` call at the cost of slightly more verbose
-      // templates.
-      for (var i = 0; i < data.length; i++) {
-        this.tpl.call(this, data[i], i);
-      }
+    with(this) {
+      for (var i=0; i < data.length; i++) {
+        eval("(" + this.tpl.toString() + ")(data[i])");
+      };
     }
     
     var roots  = this.getRoots(),
@@ -249,6 +243,16 @@ Jaml.Template.prototype = {
     };
     
     return output;
+  },
+  
+  escape: function(string) {
+    if (!string) {
+      return "";
+    }
+    string = string.replace(/</g, "&lt;");
+    string = string.replace(/>/g, "&gt;");
+    string = string.replace(/"/g, "&quot;");
+    return string;
   },
   
   /**
@@ -269,6 +273,14 @@ Jaml.Template.prototype = {
     return roots;
   },
   
+  write: function(arg) {
+    this.nodes.push(new Jaml.TextNode(arg));
+  },
+  
+  template: function(name, arg) {
+    this.write(Jaml.render(name, arg));
+  },
+  
   tags: [
     "html", "head", "body", "script", "meta", "title", "link", "script",
     "div", "p", "span", "a", "img", "br", "hr",
@@ -276,7 +288,8 @@ Jaml.Template.prototype = {
     "ul", "ol", "li", 
     "dl", "dt", "dd",
     "h1", "h2", "h3", "h4", "h5", "h6", "h7",
-    "form", "input", "label"
+    "form", "input", "label",
+    "b", "strong"
   ]
 };
 
@@ -285,45 +298,46 @@ Jaml.Template.prototype = {
  */
 (function() {
   var tags = Jaml.Template.prototype.tags;
-
-  /**
-   * This function is created for each tag name and assigned to Template's
-   * prototype below.
-   */  
-  function makeTagHelper(tagName) {
-    return function(attrs) {
-      var node = new Jaml.Node(tagName);
-      
-      var firstArgIsAttributes =  (typeof attrs == 'object')
-                               && !(attrs instanceof Jaml.Node)
-                               && !(attrs instanceof Jaml.TextNode);
-
-      if (firstArgIsAttributes) node.setAttributes(attrs);
-
-      var startIndex = firstArgIsAttributes ? 1 : 0;
-
-      for (var i=startIndex; i < arguments.length; i++) {
-        var arg = arguments[i];
-
-        if (typeof arg == "string" || arg == undefined) {
-          arg = new Jaml.TextNode(arg || "");
-        }
-        
-        if (arg instanceof Jaml.Node || arg instanceof Jaml.TextNode) {
-          arg.parent = node;
-        }
-
-        node.addChild(arg);
-      };
-      
-      this.nodes.push(node);
-      
-      return node;
-    };
-  }
   
   for (var i = tags.length - 1; i >= 0; i--){
-    var tagName = tags[i];    
-    Jaml.Template.prototype[tagName] = makeTagHelper(tagName);
+    var tagName = tags[i];
+    
+    /**
+     * This function is created for each tag name and assigned to Template's
+     * prototype below
+     */
+    var fn = function(tagName) {
+      return function(attrs) {
+        var node = new Jaml.Node(tagName);
+        
+        var firstArgIsAttributes =  (typeof attrs == 'object')
+                                 && !(attrs instanceof Jaml.Node)
+                                 && !(attrs instanceof Jaml.TextNode);
+
+        if (firstArgIsAttributes) node.setAttributes(attrs);
+
+        var startIndex = firstArgIsAttributes ? 1 : 0;
+
+        for (var i=startIndex; i < arguments.length; i++) {
+          var arg = arguments[i];
+
+          if (typeof arg == "string" || arg == undefined) {
+            arg = new Jaml.TextNode(arg || "");
+          }
+          
+          if (arg instanceof Jaml.Node || arg instanceof Jaml.TextNode) {
+            arg.parent = node;
+          }
+
+          node.addChild(arg);
+        };
+        
+        this.nodes.push(node);
+        
+        return node;
+      };
+    };
+    
+    Jaml.Template.prototype[tagName] = fn(tagName);
   };
 })();
