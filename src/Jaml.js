@@ -40,6 +40,27 @@ Jaml = function() {
     registerHelper: function(name, helperFn) {
       this.helpers[name] = helperFn;
     },
+  
+    tags: [
+      "html", "head", "body", "script", "meta", "title", "link", "script",
+      "div", "p", "span", "a", "img", "br", "hr",
+      "table", "tr", "th", "td", "thead", "tbody",
+      "ul", "ol", "li", 
+      "dl", "dt", "dd",
+      "h1", "h2", "h3", "h4", "h5", "h6", "h7",
+      "form", "input", "label",
+      "b", "strong"
+    ],
+  
+    /**
+     * @property selfClosingTags
+     * @type Array
+     * An array of all tags that should be self closing
+     */
+    selfClosingTags: [
+      'area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input',
+      'isindex', 'link', 'meta', 'param'
+    ],
     
     escape: function(string) {
       if (!string) {

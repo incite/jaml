@@ -120,21 +120,14 @@ Jaml.Node.prototype = {
    * @return {Boolean} True if this tag should close itself
    */
   isSelfClosing: function() {
-    for (var i = this.selfClosingTags.length - 1; i >= 0; i--){
-      if (this.tagName == this.selfClosingTags[i]) {
+    for (var i = Jaml.selfClosingTags.length - 1; i >= 0; i--){
+      if (this.tagName == Jaml.selfClosingTags[i]) {
         return true;
       }
     }
     
     return false;
-  },
-  
-  /**
-   * @property selfClosingTags
-   * @type Array
-   * An array of all tags that should be self closing
-   */
-  selfClosingTags: ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input', 'isindex', 'link', 'meta', 'param']
+  }
 };
 
 Jaml.TextNode = function(text) {

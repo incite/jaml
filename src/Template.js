@@ -76,9 +76,8 @@ Jaml.Template.prototype = {
   getRoots: function() {
     var roots = [];
     
-    for (var i=0; i < this.nodes.length; i++) {
+    for (var i = 0; i < this.nodes.length; i++) {
       var node = this.nodes[i];
-      
       if (node.parent == undefined) roots.push(node);
     };
     
@@ -93,61 +92,44 @@ Jaml.Template.prototype = {
     this.write(Jaml.render(name, arg));
   },
   
-  tags: [
-    "html", "head", "body", "script", "meta", "title", "link", "script",
-    "div", "p", "span", "a", "img", "br", "hr",
-    "table", "tr", "th", "td", "thead", "tbody",
-    "ul", "ol", "li", 
-    "dl", "dt", "dd",
-    "h1", "h2", "h3", "h4", "h5", "h6", "h7",
-    "form", "input", "label",
-    "b", "strong"
-  ]
+  isAttributes: function(attrs) {
+    return (typeof attrs == 'object') && !(attrs instanceof Jaml.Node) && !(attrs instanceof Jaml.TextNode);
+  }
 };
 
 /**
  * Adds a function for each tag onto Template's prototype
  */
 (function() {
-  var tags = Jaml.Template.prototype.tags;
-  
-  for (var i = tags.length - 1; i >= 0; i--){
-    /**
-     * This function is created for each tag name and assigned to Template's
-     * prototype below
-     */
-    var fn = function(tagName) {
-      return function(attrs) {
-        var node = new Jaml.Node(tagName);
-        
-        var firstArgIsAttributes =  (typeof attrs == 'object')
-                                 && !(attrs instanceof Jaml.Node)
-                                 && !(attrs instanceof Jaml.TextNode);
+  function createTagFunction(tagName) {
+    return function(attrs) {
+      var node = new Jaml.Node(tagName);
+      var startIndex = 0;
+      
+      if (this.isAttributes(attrs)) {
+        node.setAttributes(attrs);
+        startIndex = 1;
+      }
 
-        if (firstArgIsAttributes) node.setAttributes(attrs);
+      for (var i = startIndex; i < arguments.length; i++) {
+        var arg = arguments[i];
 
-        var startIndex = firstArgIsAttributes ? 1 : 0;
+        if (typeof arg == "string" || arg == undefined) {
+          arg = new Jaml.TextNode(arg || "");
+        } else if (arg instanceof Jaml.Node || arg instanceof Jaml.TextNode) {
+          arg.parent = node;
+        }
 
-        for (var i = startIndex; i < arguments.length; i++) {
-          var arg = arguments[i];
-
-          if (typeof arg == "string" || arg == undefined) {
-            arg = new Jaml.TextNode(arg || "");
-          }
-          
-          if (arg instanceof Jaml.Node || arg instanceof Jaml.TextNode) {
-            arg.parent = node;
-          }
-
-          node.addChild(arg);
-        };
-        
-        this.nodes.push(node);
-        
-        return node;
+        node.addChild(arg);
       };
+      
+      this.nodes.push(node);
+      return node;
     };
-    
-    Jaml.Template.prototype[tags[i]] = fn(tags[i]);
-  };
+  }
+  
+  for (var i = Jaml.tags.length - 1; i >= 0; i--){
+    var tagName = Jaml.tags[i];
+    Jaml.Template.prototype[tagName] = createTagFunction(tagName);
+  }
 })();
