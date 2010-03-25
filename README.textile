@@ -82,8 +82,8 @@ pre.. <div class="product">
   <a href="image.png">View larger image</a>
   <form>
     <label for="quantity">Quantity</label>
-    <input type="text" name="quantity" id="quantity" value="1"></input>
-    <input type="submit" value="Add to Cart"></input>
+    <input type="text" name="quantity" id="quantity" value="1" />
+    <input type="submit" value="Add to Cart" />
   </form>
 </div>
 
@@ -132,8 +132,8 @@ pre.. <div class="category">
   <a href="image.png">View larger image</a>
   <form>
     <label for="quantity">Quantity</label>
-    <input type="text" name="quantity" id="quantity" value="1"></input>
-    <input type="submit" value="Add to Cart"></input>
+    <input type="text" name="quantity" id="quantity" value="1" />
+    <input type="submit" value="Add to Cart" />
   </form>
 </div>
 <div class="product">
@@ -143,8 +143,8 @@ pre.. <div class="category">
   <a href="image.png">View larger image</a>
   <form>
     <label for="quantity">Quantity</label>
-    <input type="text" name="quantity" id="quantity" value="1"></input>
-    <input type="submit" value="Add to Cart"></input>
+    <input type="text" name="quantity" id="quantity" value="1" />
+    <input type="submit" value="Add to Cart" />
   </form>
 </div>
 </div>
