@@ -52,6 +52,11 @@ Jaml.Template.prototype = {
     return output;
   },
   
+  escape: function(value) {
+    value = value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    return value;
+  },
+  
   /**
    * Returns all top-level (root) nodes in this template tree.
    * Templates are tree structures, but there is no guarantee that there is a
