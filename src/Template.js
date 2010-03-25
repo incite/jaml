@@ -64,13 +64,7 @@ Jaml.Template.prototype = {
   },
   
   escape: function(string) {
-    if (!string) {
-      return "";
-    }
-    string = string.replace(/</g, "&lt;");
-    string = string.replace(/>/g, "&gt;");
-    string = string.replace(/"/g, "&quot;");
-    return string;
+    return Jaml.escape(string);
   },
   
   /**

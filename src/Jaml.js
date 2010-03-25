@@ -39,6 +39,17 @@ Jaml = function() {
      */
     registerHelper: function(name, helperFn) {
       this.helpers[name] = helperFn;
+    },
+    
+    escape: function(string) {
+      if (!string) {
+        return "";
+      }
+      string = String(string);
+      string = string.replace(/</g, "&lt;");
+      string = string.replace(/>/g, "&gt;");
+      string = string.replace(/"/g, "&quot;");
+      return string;
     }
   };
 }();

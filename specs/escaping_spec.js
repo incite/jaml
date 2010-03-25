@@ -25,5 +25,9 @@ describe("Jaml escaping", function() {
     });
     
     expect(stripWhitespace(Jaml.render("myTemplate"))).toEqual("");
+  });
+  
+  it("should be OK with non-strings", function() {
+    expect(Jaml.escape(5)).toEqual("5");
   })
 });

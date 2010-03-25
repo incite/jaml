@@ -72,11 +72,7 @@ Jaml.Node.prototype = {
     
     //add any tag attributes
     for (var key in this.attributes) {
-      var value = "" + this.attributes[key];
-      if (value) {
-        value = value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-      }
-      node.push(" " + key + "=\"" + value + "\"");
+      node.push(" " + key + "=\"" + Jaml.escape(this.attributes[key]) + "\"");
     }
     
     if (this.isSelfClosing()) {
@@ -138,8 +134,7 @@ Jaml.Node.prototype = {
    * @type Array
    * An array of all tags that should be self closing
    */
-  selfClosingTags: ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr',
-  -                 'img', 'input', 'isindex', 'link', 'meta', 'param']
+  selfClosingTags: ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input', 'isindex', 'link', 'meta', 'param']
 };
 
 Jaml.TextNode = function(text) {
