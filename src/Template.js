@@ -36,10 +36,21 @@ Jaml.Template.prototype = {
       data = [data];
     }
     
-    with(this) {
-      for (var i=0; i < data.length; i++) {
-        eval("(" + this.tpl.toString() + ")(data[i])");
-      };
+    if (Jaml.automaticScope) {
+      // Use function decompilation to put all helpers in the
+      // function's scope.
+      with(this) {
+        for (var i = 0; i < data.length; i++) {
+          eval("(" + this.tpl.toString() + ")(data[i], i)");
+        };
+      }      
+    } else {
+      // Avoid the `eval` call at the cost of slightly more verbose
+      // templates.
+
+      for (var i = 0; i < data.length; i++) {
+        this.tpl.call(this, data[i], i);
+      }
     }
     
     var roots  = this.getRoots(),

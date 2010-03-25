@@ -138,7 +138,8 @@ Jaml.Node.prototype = {
    * @type Array
    * An array of all tags that should be self closing
    */
-  selfClosingTags: ['img', 'meta', 'br', 'hr', 'link', 'input']
+  selfClosingTags: ['area', 'base', 'basefont', 'br', 'col', 'frame', 'hr',
+  -                 'img', 'input', 'isindex', 'link', 'meta', 'param']
 };
 
 Jaml.TextNode = function(text) {

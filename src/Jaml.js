@@ -7,6 +7,7 @@
  */
 Jaml = function() {
   return {
+    automaticScope: true,
     templates: {},
     helpers  : {},
     
