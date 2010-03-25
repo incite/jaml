@@ -18,4 +18,12 @@ describe("Jaml escaping", function() {
       <a>&lt; less than &lt; &gt; greater than &gt; &quot; quote &quot;</a>\
     "));
   });
+  
+  it("should escape the undefined value", function() {
+    Jaml.register("myTemplate", function() {
+      write(escape(undefined));
+    });
+    
+    expect(stripWhitespace(Jaml.render("myTemplate"))).toEqual("");
+  })
 });

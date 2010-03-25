@@ -52,9 +52,14 @@ Jaml.Template.prototype = {
     return output;
   },
   
-  escape: function(value) {
-    value = value.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    return value;
+  escape: function(string) {
+    if (!string) {
+      return "";
+    }
+    string = string.replace(/</g, "&lt;");
+    string = string.replace(/>/g, "&gt;");
+    string = string.replace(/"/g, "&quot;");
+    return string;
   },
   
   /**
@@ -77,6 +82,10 @@ Jaml.Template.prototype = {
   
   write: function(arg) {
     this.nodes.push(new Jaml.TextNode(arg));
+  },
+  
+  template: function(name, arg) {
+    this.write(Jaml.render(name, arg));
   },
   
   tags: [
