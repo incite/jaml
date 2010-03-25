@@ -149,3 +149,9 @@ pre.. <div class="category">
 </div>
 </div>
 </div>
+
+.h1 Running tests
+
+pre.
+    git clone git://github.com/pivotal/jasmine.git lib/jasmine
+    open specs/runner.html
