@@ -35,16 +35,14 @@ describe("Jaml sub-templates", function() {
           <title>Some Title</title>\
         </head>\
         <body>\
-          <div id=\"loading-mask\">\
-          </div>\
+          <div id=\"loading-mask\"></div>\
           <div id=\"loading\">\
-          <div class=\"loading-indicator\">\
-          </div>\
-          <ul>\
-            <li>First</li>\
-            <li>Second</li>\
-            <li>Third</li>\
-          </ul>\
+            <div class=\"loading-indicator\"></div>\
+            <ul>\
+              <li>First</li>\
+              <li>Second</li>\
+              <li>Third</li>\
+            </ul>\
           </div>\
         </body>\
       </html>\
