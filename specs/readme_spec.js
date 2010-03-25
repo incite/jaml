@@ -1,12 +1,4 @@
-describe("Jaml", function () {
-  it("should render hello world", function() {
-    Jaml.register("my_template", function() {
-      p("hello world");
-    });
-    
-    expect(Jaml.render("my_template")).toEqual("<p>hello world</p>\n");
-  });
-  
+describe("Jaml readme", function () {
   it("should render a simple template", function() {
     Jaml.register('simple', function() {
       div(
