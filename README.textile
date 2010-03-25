@@ -152,6 +152,5 @@ pre.. <div class="category">
 
 h1. Running specs
 
-pre.
-    git clone git://github.com/pivotal/jasmine.git lib/jasmine
-    open specs/runner.html
+git clone git://github.com/pivotal/jasmine.git lib/jasmine
+open specs/runner.html
