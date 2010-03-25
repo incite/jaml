@@ -75,6 +75,10 @@ Jaml.Template.prototype = {
     return roots;
   },
   
+  write: function(arg) {
+    this.nodes.push(new Jaml.TextNode(arg));
+  },
+  
   tags: [
     "html", "head", "body", "script", "meta", "title", "link", "script",
     "div", "p", "span", "a", "img", "br", "hr",
@@ -82,7 +86,8 @@ Jaml.Template.prototype = {
     "ul", "ol", "li", 
     "dl", "dt", "dd",
     "h1", "h2", "h3", "h4", "h5", "h6", "h7",
-    "form", "input", "label"
+    "form", "input", "label",
+    "b", "strong"
   ]
 };
 
