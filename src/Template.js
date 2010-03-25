@@ -112,8 +112,6 @@ Jaml.Template.prototype = {
   var tags = Jaml.Template.prototype.tags;
   
   for (var i = tags.length - 1; i >= 0; i--){
-    var tagName = tags[i];
-    
     /**
      * This function is created for each tag name and assigned to Template's
      * prototype below
@@ -130,7 +128,7 @@ Jaml.Template.prototype = {
 
         var startIndex = firstArgIsAttributes ? 1 : 0;
 
-        for (var i=startIndex; i < arguments.length; i++) {
+        for (var i = startIndex; i < arguments.length; i++) {
           var arg = arguments[i];
 
           if (typeof arg == "string" || arg == undefined) {
@@ -150,6 +148,6 @@ Jaml.Template.prototype = {
       };
     };
     
-    Jaml.Template.prototype[tagName] = fn(tagName);
+    Jaml.Template.prototype[tags[i]] = fn(tags[i]);
   };
 })();
