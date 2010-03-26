@@ -39,11 +39,12 @@ Jaml.Template.prototype = {
     if (Jaml.automaticScope) {
       // Use function decompilation to put all helpers in the
       // function's scope.
-      with(this) {
-        for (var i = 0; i < data.length; i++) {
-          eval("(" + this.tpl.toString() + ")(data[i], i)");
-        };
-      }      
+      for (var i = 0; i < data.length; i++) {
+        var d = data[i];
+        with (this) {
+          eval("(" + this.tpl.toString() + ")(d, i)");
+        }
+      }
     } else {
       // Avoid the `eval` call at the cost of slightly more verbose
       // templates.
