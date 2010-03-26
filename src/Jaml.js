@@ -57,10 +57,21 @@ Jaml = function() {
      * @type Array
      * An array of all tags that should be self closing
      */
-    selfClosingTags: [
-      'area', 'base', 'basefont', 'br', 'col', 'frame', 'hr', 'img', 'input',
-      'isindex', 'link', 'meta', 'param'
-    ],
+    selfClosingTags: {
+      "col": true,
+      "basefont": true,
+      "isindex": true,
+      "img": true,
+      "param": true,
+      "meta": true,
+      "br": true,
+      "frame": true,
+      "area": true,
+      "link": true,
+      "input": true,
+      "hr": true,
+      "base": true
+    },
     
     escape: function(string) {
       if (!string) {
