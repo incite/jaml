@@ -15,7 +15,7 @@ Jaml.Node = function(tagName) {
    * @type Object
    * Sets of attributes on this node (e.g. 'cls', 'id', etc)
    */
-  this.attributes = {};
+  this.attributes = "";
   
   /**
    * @property children
@@ -31,11 +31,13 @@ Jaml.Node.prototype = {
    * @param {Object} attrs Object containing key: value pairs of node attributes
    */
   setAttributes: function(attrs) {
+    if (attrs["cls"]) {
+      attrs["class"] = attrs["cls"];
+      delete attrs["cls"];
+    }
+    
     for (var key in attrs) {
-      //convert cls to class
-      var mappedKey = key == 'cls' ? 'class' : key;
-      
-      this.attributes[mappedKey] = attrs[key];
+      this.attributes += " " + key + "=\"" + Jaml.escape(attrs[key]) + "\"";
     }
   },
   
@@ -66,9 +68,7 @@ Jaml.Node.prototype = {
     node += "<" + this.tagName;
     
     //add any tag attributes
-    for (var key in this.attributes) {
-      node += " " + key + "=\"" + Jaml.escape(this.attributes[key]) + "\"";
-    }
+    node += this.attributes;
     
     if (this.isSelfClosing()) {
       node += " />\n";
