@@ -55,49 +55,44 @@ Jaml.Node.prototype = {
   render: function(lpad) {
     lpad = lpad || 0;
     
-    var node      = [],
-        attrs     = [],
+    var node      = "",
         textnode  = (this instanceof Jaml.TextNode),
-        multiline = this.multiLineTag();
-    
-    for (var key in this.attributes) {
-      attrs.push(key + '=' + this.attributes[key]);
-    }
+        multiline = this.isMultiLineTag();
     
     //add any left padding
-    if (!textnode) node.push(this.getPadding(lpad));
+    if (!textnode) node += this.getPadding(lpad);
     
     //open the tag
-    node.push("<" + this.tagName);
+    node += "<" + this.tagName;
     
     //add any tag attributes
     for (var key in this.attributes) {
-      node.push(" " + key + "=\"" + Jaml.escape(this.attributes[key]) + "\"");
+      node += " " + key + "=\"" + Jaml.escape(this.attributes[key]) + "\"";
     }
     
     if (this.isSelfClosing()) {
-      node.push(" />\n");
+      node += " />\n";
     } else {
-      node.push(">");
+      node += ">";
       
-      if (multiline) node.push("\n");
+      if (multiline) node += "\n";
       
       for (var i=0; i < this.children.length; i++) {
-        node.push(this.children[i].render(lpad + 2));
+        node += this.children[i].render(lpad + 2);
       }
       
-      if (multiline) node.push(this.getPadding(lpad));
-      node.push("</", this.tagName, ">\n");
+      if (multiline) node += (this.getPadding(lpad));
+      node += "</" + this.tagName + ">\n";
     }
     
-    return node.join("");
+    return node;
   },
   
   /**
    * Returns true if this tag should be rendered with multiple newlines (e.g. if it contains child nodes)
    * @return {Boolean} True to render this tag as multi-line
    */
-  multiLineTag: function() {
+  isMultiLineTag: function() {
     var childLength = this.children.length,
         multiLine   = childLength > 0;
     

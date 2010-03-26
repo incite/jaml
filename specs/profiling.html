@@ -1,0 +1,79 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Jasmine Test Runner</title>
+  <script type="text/javascript" src="../lib/jasmine/lib/jasmine-0.10.2.js"></script>
+  <script type="text/javascript" src="../lib/jasmine/lib/TrivialReporter.js"></script>
+  <script type="text/javascript" src="../lib/jasmine/lib/consolex.js"></script>
+  <link rel="stylesheet" type="text/css" href="../lib/jasmine/lib/jasmine.css">
+
+  <script type="text/javascript" src="../src/Jaml.js"></script>
+  <script type="text/javascript" src="../src/Node.js"></script>
+  <script type="text/javascript" src="../src/Template.js"></script>
+</head>
+<body>
+    
+    <script type="text/javascript">
+        Jaml.register('product', function(product) {
+          div({cls: 'product'},
+            h1(product.title),
+          
+            p(product.description),
+          
+            img({src: product.thumbUrl}),
+            a({href: product.imageUrl}, 'View larger image'),
+          
+            form(
+              label({'for': 'quantity'}, "Quantity"),
+              input({type: 'text', name: 'quantity', id: 'quantity', value: 1}),
+          
+              input({type: 'submit', value: 'Add to Cart'})
+            )
+          );
+        });
+    
+        Jaml.register('category', function(category) {
+          div({cls: 'category'},
+            h1(category.name),
+            p(category.products.length + " products in this category:"),
+
+            div({cls: 'products'},
+              Jaml.render('product', category.products)
+            )
+          );
+        });
+
+        var bsg = {
+          title      : 'Battlestar Galactica DVDs',
+          thumbUrl   : 'thumbnail.png',
+          imageUrl   : 'image.png',
+          description: 'Best. Show. Evar.'
+        };
+
+        //here's a second product
+        var snowWhite = {
+          title      : 'Snow White',
+          description: 'not so great actually',
+          thumbUrl   : 'thumbnail.png',
+          imageUrl   : 'image.png'
+        };
+
+        //and a category
+        var category = {
+          name    : 'Doovde',
+          products: [bsg, snowWhite]
+        };
+        
+        function run() {
+            for (var i = 0; i < 250; i++) {
+                Jaml.render('category', category);
+            }
+        }
+
+    </script>
+    
+    <input type="button" onclick="run()" value="Run">
+    
+</body>
+</html>

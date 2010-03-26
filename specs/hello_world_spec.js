@@ -6,4 +6,4 @@ describe("Hello world", function () {
     
     expect(Jaml.render("my_template")).toEqual("<p>hello world</p>\n");
   });
-}
+});
