@@ -19,4 +19,16 @@ describe("Templates", function () {
     
     expect(stripWhitespace(Jaml.render("outer"))).toEqual("<p>hello world</p>");
   });
+  
+  it("should support templates within templates", function() {
+    Jaml.register("hi", function(name) {
+      p("hello world");
+    });
+    
+    Jaml.register("outer", function() {
+      div(template("hi"))
+    });
+    
+    expect(stripWhitespace(Jaml.render("outer"))).toEqual("<div><p>hello world</p></div>");
+  });
 });
