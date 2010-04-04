@@ -31,4 +31,16 @@ describe("Templates", function () {
     
     expect(stripWhitespace(Jaml.render("outer"))).toEqual("<div><p>hello world</p></div>");
   });
+  
+  it("should pass undefined to an inner template", function() {
+    Jaml.register("one", function(parameter) {
+      p(String(parameter));
+    });
+    
+    Jaml.register("two", function() {
+      div(Jaml.render("one", undefined));
+    });
+    
+    expect(stripWhitespace(Jaml.render("two"))).toEqual("<p></p>");
+  });
 });
