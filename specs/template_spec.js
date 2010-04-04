@@ -34,9 +34,9 @@ describe("Templates", function () {
   
   it("should pass undefined to a template", function() {
     Jaml.register("one", function(parameter) {
-      p("" + parameter);
+      p(String(parameter));
     });
     
-    expect(stripWhitespace(Jaml.render("one", undefined))).toEqual("<p></p>");
+    expect(stripWhitespace(Jaml.render("one", undefined))).toEqual("<p>undefined</p>");
   });
 });

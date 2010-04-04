@@ -28,11 +28,9 @@ Jaml.Template.prototype = {
    * @return {String} The rendered HTML string
    */
   render: function(data) {
-    data = data || {};
-    
     //the 'data' argument can come in two flavours - array or non-array. Normalise it
     //here so that it always looks like an array.
-    if (data.constructor.toString().indexOf("Array") == -1) {
+    if (!(data instanceof Array)) {
       data = [data];
     }
     
