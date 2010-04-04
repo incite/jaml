@@ -27,9 +27,7 @@ Jaml = function() {
      * @param {Object} data Optional data object
      */
     render: function(name, data) {
-      var template = this.templates[name],
-          renderer = new Jaml.Template(template);
-          
+      var renderer = new Jaml.Template(this.templates[name]);
       return renderer.render(data);
     },
     
@@ -244,11 +242,9 @@ Jaml.Template.prototype = {
    * @return {String} The rendered HTML string
    */
   render: function(data) {
-    data = data || {};
-    
     //the 'data' argument can come in two flavours - array or non-array. Normalise it
     //here so that it always looks like an array.
-    if (data.constructor.toString().indexOf("Array") == -1) {
+    if (!(data instanceof Array)) {
       data = [data];
     }
     
@@ -306,7 +302,7 @@ Jaml.Template.prototype = {
   },
   
   template: function(name, arg) {
-    this.write(Jaml.render(name, arg));
+    return Jaml.render(name, arg);
   },
   
   isAttributes: function(attrs) {
