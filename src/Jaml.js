@@ -26,9 +26,7 @@ Jaml = function() {
      * @param {Object} data Optional data object
      */
     render: function(name, data) {
-      var template = this.templates[name],
-          renderer = new Jaml.Template(template);
-          
+      var renderer = new Jaml.Template(this.templates[name]);
       return renderer.render(data);
     },
     
