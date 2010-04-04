@@ -14,7 +14,7 @@ describe("Templates", function () {
     });
     
     Jaml.register("outer", function() {
-      template("hi", "world");
+      write(template("hi", "world"));
     });
     
     expect(stripWhitespace(Jaml.render("outer"))).toEqual("<p>hello world</p>");

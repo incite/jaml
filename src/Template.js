@@ -88,7 +88,7 @@ Jaml.Template.prototype = {
   },
   
   template: function(name, arg) {
-    this.write(Jaml.render(name, arg));
+    return Jaml.render(name, arg);
   },
   
   isAttributes: function(attrs) {
