@@ -55,7 +55,6 @@ Jaml.Template.prototype = {
     var roots  = this.getRoots(),
         output = "";
     
-    console.log(roots);
     for (var i=0; i < roots.length; i++) {
       output += roots[i].render();
     };
