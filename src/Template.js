@@ -37,10 +37,10 @@ Jaml.Template.prototype = {
     if (Jaml.automaticScope) {
       // Use function decompilation to put all helpers in the
       // function's scope.
-      for (var i = 0; i < data.length; i++) {
-        var d = data[i];
+      for (var index = 0; index < data.length; index++) {
+        var d = data[index];
         with (this) {
-          eval("(" + this.tpl.toString() + ")(d, i)");
+          eval("(" + this.tpl.toString() + ")(d, index)");
         }
       }
     } else {
@@ -55,6 +55,7 @@ Jaml.Template.prototype = {
     var roots  = this.getRoots(),
         output = "";
     
+    console.log(roots);
     for (var i=0; i < roots.length; i++) {
       output += roots[i].render();
     };

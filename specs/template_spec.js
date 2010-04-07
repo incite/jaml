@@ -39,4 +39,13 @@ describe("Templates", function () {
     
     expect(stripWhitespace(Jaml.render("one", undefined))).toEqual("<p>undefined</p>");
   });
+  
+  it("should pass an index to the template function", function() {
+    Jaml.register("my_template", function(object, index) {
+      p(object);
+      p(String(index));
+    });
+    
+    expect(stripWhitespace(Jaml.render("my_template", ["one", "two"]))).toEqual("<p>one</p><p>0</p><p>two</p><p>1</p>");
+  });
 });
