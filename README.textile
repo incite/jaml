@@ -153,4 +153,7 @@ pre.. <div class="category">
 h1. Running specs
 
 git clone git://github.com/pivotal/jasmine.git lib/jasmine
+cd lib/jasmine
+git reset --hard 9f8d18b6b7395a1deb35f35af02305450aef55ba
+cd ../..
 open specs/runner.html
